@@ -62,6 +62,8 @@ int main() {
   // 2) Making all calls to a class threadsafe
   {
     std::cout << std::endl << "Example 2:" << std::endl;
+
+    // Dummy mutex class
     struct Mutex {
       void lock() {
         std::cout << "dummy lock" << std::endl;
@@ -73,13 +75,14 @@ int main() {
     };
 
     Mutex mutex;
-    ExecuteAround<A, std::shared_ptr, std::function<void()>, std::function<void()>> execute_around(new A, std::bind(&Mutex::lock, &mutex), std::bind(&Mutex::unlock, &mutex));
+    ExecuteAround<A, std::shared_ptr, std::function<void()>, std::function<void()>>
+      execute_around(new A, std::bind(&Mutex::lock, &mutex), std::bind(&Mutex::unlock, &mutex));
     execute_around->f();
 
     std::cout << std::endl << "Example2 with two calls in one expression:" << std::endl;
 
     // Warning! Mutex should be recursive for the next line to
-    // work. Because the temporary object that will called "unlock"
+    // work. Because the temporary object that will call "unlock"
     // upon destruction will still exists when the second call
     // to another execute_around class member will be called
     // (which makes a call to "lock")
