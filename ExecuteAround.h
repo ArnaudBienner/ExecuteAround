@@ -35,8 +35,12 @@ private:
       func_out_();
     }
 
-    T* operator->() const {
-      return const_cast<T*>(ptr_);
+    const T* operator->() const {
+      return ptr_;
+    }
+
+    T* operator->() {
+      return ptr_;
     }
 
   private:
